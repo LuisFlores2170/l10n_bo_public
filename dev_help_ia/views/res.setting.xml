@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_ia_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.ia.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Configuracion ia beta" string="Configuration ia beta"
+                     data-key="dev_help_ia"
+                     groups="dev_help_ia.group_help_ia">
+                    <h2>Configuration ia beta</h2>
+                    <div class="row mt16 o_settings_container" id="ia_configuration">
+                        <div>
+                            <span>Api key</span>
+                            <field name="api_key" />
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="l10n_bo_ia_configuration_settings" model="ir.actions.act_window">
+        <field name="name">Settings ia</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_ia_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'dev_help_ia'}</field>
+    </record>
+</odoo>

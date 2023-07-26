@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!--ESTO SE APLICA PARA LA VISTA EN CASO DE QUE HAYA DATOS-->        
+        <record id="view_help_ia_tree" model="ir.ui.view">
+            <field name="name">view.help.ia.tree</field>
+            <field name="model">help.ia</field>
+            <field name="type">tree</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <tree string="model_tree" create="true" delete="true" edit="true">
+                    <field name="name" />
+                    <field name="query_text" string="Consulta" />
+                </tree>
+                
+            </field>
+        </record>
+
+            
+        <!-- Search view for "model" -->
+        <record id="view_help_ia_search" model="ir.ui.view">
+            <field name="name">view.help.ia.search</field>
+            <field name="model">help.ia</field>
+            <field name="type">search</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <search string="model_search">
+                    <field name="name"/>
+                    <field name="query_text"/>
+                    <field name="query_response"/>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- ESTO SE APLICA PARA EL FORMULARIO -->
+        <record id="view_help_ia_form" model="ir.ui.view">
+            <field name="name">view.help.ia.form</field>
+            <field name="model">help.ia</field>
+            <field name="type">form</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="16" />
+            <field name="active" eval="True" />
+            <field name="arch" type="xml">
+                <form string="model_form" create="true" delete="true" edit="true">
+                    <header>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group string="Buscar">
+                            <group>
+                                <field name="query_text" />
+                            </group>
+                            <group>
+                                <button name="generate_query"
+                                    icon="fa-search"
+                                    string=""
+                                    type="object"
+                                    help=""/>
+                            </group>
+                            
+                        </group>
+                        <group string="Respuesta">
+                            <field name="query_response" id="id_html" style="height: auto;"  widget="CopyClipboardText" />
+                        </group>
+                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESTO SE APLICA PARA LA OPCION HEADER DE LA VISTA LISTA -->
+
+        <record model="ir.actions.act_window" id="help_ia_list">
+            <field name="name">Ayudas IA</field>
+            <field name="res_model">help.ia</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create the first help ia
+                </p>
+            </field>
+        </record>
+        
+        
+
+
+
+
+
+        <menuitem   name="Help ia" 
+                    id="help_ia" 
+                    sequence="1"
+                    action = "help_ia_list"
+                    web_icon="dev_help_ia,static/descriptions/icon.png"
+        />
+        
+    </data>
+</odoo>

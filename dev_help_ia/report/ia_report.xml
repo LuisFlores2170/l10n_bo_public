@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="paper_report_ia" model="report.paperformat" >
+        <field name="name">Formato 1/4 de pagina</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">280</field>
+        <field name="page_width">210</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">7</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_spacing">10</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <data>
+        <template id="report_ia_document" >
+            <t t-call="dev_help_ia.layout_standard_ia_customer_reports">
+                <t t-set="o" t-value="o.with_context(lang=o.user_id.partner_id.lang)"/>
+                <div class="page">
+                    <h1 style="color:green" >IA Beta</h1>
+                    <br/>
+                    <h2 t-field="o.query_text" />
+                    <hr/>
+                    <br/>
+                    <p t-field='o.get_copy_html()'/>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_ia">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="dev_help_ia.report_ia_document" />
+                </t>
+            </t>
+        </template>
+
+        <!-- ############################################################################################### -->
+        
+        <record id="action_report_ia_document" model="ir.actions.report">
+            <field name="name">IA Beta</field>
+            <field name="model">help.ia</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">dev_help_ia.report_ia</field>
+            <field name="report_file">dev_help_ia.report_ia</field>
+            <field name="paperformat_id" ref="dev_help_ia.paper_report_ia"/>
+            <field name="binding_type">report</field>
+            <field name="binding_model_id" ref="model_help_ia"/>
+        </record>
+
+        <!-- ############################################################################################### -->
+
+        <template id="layout_standard_ia_customer_reports">
+            <t t-if="not o" t-set="o" t-value="doc" />
+            <t t-if="not company">
+                <t t-if="company_id">
+                    <t t-set="company" t-value="company_id" />
+                </t>
+                <t t-elif="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id.sudo()" />
+                </t>
+                <t t-else="else">
+                    <t t-set="company" t-value="res_company" />
+                </t>
+            </t>
+
+            <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+            
+                <span style="padding-right: 130px;" t-field="company.name"></span>
+
+                <div class="row">
+                    <div class="col-6" name="company_address">
+                        <span style="font-size: 12px" t-if="company.vat"><span style="font-size: 12px; "><b>NIT:</b></span> <span t-field="company.vat"/></span> <br/>
+                        <span style="font-size: 12px; padding-right: 130px;" t-if="company.email"><i style="font-size: 12px" class="fa fa-envelope"></i> <span t-field="company.email"/></span>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <div class="pt-5">
+                    <!-- This div ensures that the address is not cropped by the header. -->
+                    <t t-call="web.address_layout"/>
+                </div>
+                <t t-out="0"/>
+            </div>
+
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                <div class="text-center" style="border-top: 1px solid black;">
+                    <div t-if="report_type == 'pdf'" class="text-muted">
+                        Pagina: <span class="page"/> / <span class="topage"/>
+                    </div>
+                </div>
+            </div>
+
+        </template> 
+    </data>
+</odoo>
